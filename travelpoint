@@ -1,0 +1,85 @@
+CREATE TABLE usuarios
+(
+    id_usuario integer NOT NULL,
+    nome character varying(100) NOT NULL,
+    endereco character varying(100) NOT NULL,
+    rg integer NOT NULL,
+    cpf integer NOT NULL,
+    data_nasc date NOT NULL,
+    email character varying(45) NOT NULL,
+    senha character varying(6)  NOT NULL,
+    agencia character varying(45) NOT NULL,
+    conta character varying(45) NOT NULL,
+    tip_conta integer NOT NULL,
+    CONSTRAINT usuarios_pkey PRIMARY KEY (id_usuario)
+);
+
+CREATE TABLE comp_aerea
+(
+    id_companhia integer NOT NULL,
+    nome_companhia character varying NOT NULL,
+    CONSTRAINT comp_aerea_pkey PRIMARY KEY (id_companhia)
+);
+
+CREATE TABLE pontos
+(
+	
+    id_pontos integer NOT NULL,
+    qtd_milhas integer NOT NULL,
+    vlr_inicial numeric(100) NOT NULL,
+    CONSTRAINT pontos_pkey PRIMARY KEY (id_pontos),
+    CONSTRAINT fk_id_companhia FOREIGN KEY (id_pontos)
+        REFERENCES comp_aerea (id_companhia) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_id_usuario FOREIGN KEY (id_pontos)
+        REFERENCES usuarios (id_usuario) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
+
+CREATE TABLE compra
+(
+    id_compra integer NOT NULL,
+    total_milhas integer NOT NULL,
+    valor_negociado numeric NOT NULL,
+    data_negociada date NOT NULL,
+    CONSTRAINT compra_pkey PRIMARY KEY (id_compra)
+);
+CREATE TABLE passagem
+(
+    id_passagem integer NOT NULL,
+    CONSTRAINT passagem_pkey PRIMARY KEY (id_passagem),
+    CONSTRAINT fk_id_compra FOREIGN KEY (id_passagem)
+        REFERENCES compra (id_compra) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_id_usuario FOREIGN KEY (id_passagem)
+        REFERENCES usuarios (id_usuario) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
+
+CREATE TABLE bancos
+(
+    id_bancos integer NOT NULL,
+    nome_banco character varying(100) NOT NULL,
+    CONSTRAINT bancos_pkey PRIMARY KEY (id_bancos)
+);
+
+CREATE TABLE avaliacao
+(
+    id_avaliacao integer NOT NULL,
+    nota_avaliacao integer NOT NULL,
+    observacao character varying(200) NOT NULL,
+    CONSTRAINT avaliacao_pkey PRIMARY KEY (id_avaliacao),
+    CONSTRAINT fk_id_compra FOREIGN KEY (id_avaliacao)
+        REFERENCES compra (id_compra) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_id_usuario FOREIGN KEY (id_avaliacao)
+        REFERENCES usuarios (id_usuario) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
+
